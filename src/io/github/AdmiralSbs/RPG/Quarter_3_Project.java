@@ -19,8 +19,8 @@ public class Quarter_3_Project extends JFrame { // Main method class
 		setSize(1300, 691);
 		setLocation(100, 100);
 		RPGui gui = new RPGui();
-		game.setContentPane(gui);
-		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setContentPane(gui);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		k = new SuperScanner(gui.getInput());
 		out = new SuperOutput(gui.getPrintOut());
 		@SuppressWarnings("unused")
@@ -29,7 +29,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 		Map mSetUp = new Map(out, new SuperOutput(gui.getDisplayOut()));
 		setUp = null;
 		mSetUp = null;
-		game.setVisible(true);
+		setVisible(true);
 	}
 	
 	public static void main(String[] args) throws IOException {
