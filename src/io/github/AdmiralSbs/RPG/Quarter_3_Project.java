@@ -14,7 +14,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 	private static Map currentMap; // Allows program to know where the player is
 	private static Player player; // Interact with player throughout program
 
-	public Quarter_3_Project() {
+	public Quarter_3_Project() { //Test
 		setTitle("RPG");
 		setSize(1300, 691);
 		setLocation(100, 100);
