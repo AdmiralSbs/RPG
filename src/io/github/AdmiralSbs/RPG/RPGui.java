@@ -3,10 +3,10 @@ package io.github.AdmiralSbs.RPG;
 import javax.swing.*;
 import java.awt.*;
 
-@SuppressWarnings("serial")
 public class RPGui extends JPanel {
 
 	// Declare subcomponents
+	private static final long serialVersionUID = 2L;
 	private JPanel displayPanel;
 	private JPanel IOPanel;
 	private JTextArea displayOut;

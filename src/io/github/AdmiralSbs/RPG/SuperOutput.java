@@ -1,9 +1,9 @@
 package io.github.AdmiralSbs.RPG;
    import javax.swing.*;
 	
-   @SuppressWarnings("serial")
 public class SuperOutput extends JPanel {
    
+	private static final long serialVersionUID = 3L;
 	private JTextArea source;
    
       public SuperOutput(JTextArea source) {

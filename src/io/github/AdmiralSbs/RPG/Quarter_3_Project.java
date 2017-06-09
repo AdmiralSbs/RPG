@@ -14,7 +14,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 	private static Map currentMap; // Allows program to know where the player is
 	private static Player player; // Interact with player throughout program
 
-	public Quarter_3_Project() { //Test
+	public Quarter_3_Project() { // Test
 		setTitle("RPG");
 		setSize(1300, 691);
 		setLocation(100, 100);
@@ -31,7 +31,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 		mSetUp = null;
 		setVisible(true);
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		int choice = -1;
 		out.println("1) New game");
@@ -56,6 +56,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 			name = k.nextLine();
 			player = new Player(name);
 			weaponChoice(); // Gives player a weapon
+			player.addContent(new Potion("Health Elixer", Potion.HP, 15, "Regenerates 15 HP"));
 			currentMap.addEntity(player, 2, 2);
 		}
 		currentMap.display();
@@ -68,6 +69,9 @@ public class Quarter_3_Project extends JFrame { // Main method class
 		out.println("K cool");
 		if (player.getHP() > 0)
 			saveGame();
+		else {
+			JOptionPane.showMessageDialog(null, "You died");
+		}
 		System.exit(0);
 	}
 
@@ -165,6 +169,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 				} else if (currentMap.getPlayerOn() == 3) {
 					Chest c = (Chest) currentMap.getCurrentOverlap();
 					chestInteraction(c);
+					out.clear();
 				} else
 					out.println("Invalid input");
 				break;
@@ -251,14 +256,24 @@ public class Quarter_3_Project extends JFrame { // Main method class
 						}
 					}
 					break;
-				case 2: // assign weapon
+				case 2: // Assign weapon
 					if (player.getContent(loc) instanceof Weapon) {
 						Weapon w = (Weapon) player.getContent(loc);
 						player.assignWeapon(w);
-					}
+					} else
+						out.println("That item cannot be equiped");
 					break;
 				case 3: // Nothing can be used, so...
-					out.println("That item cannot be used");
+					if (player.getContent(loc) instanceof Usable) {
+						out.println("Are you sure?  Type anything to confirm: ");
+						String y = k.nextLine();
+						if (!y.equals("")) {
+							Usable u = (Usable) player.getContent(loc);
+							u.use(player);
+							player.removeContent(player.getContent(loc));
+						}
+					} else
+						out.println("That item cannot be used");
 					break;
 				case 4:
 					out.println("Are you sure?  Type anything to confirm: ");
@@ -277,18 +292,18 @@ public class Quarter_3_Project extends JFrame { // Main method class
 	}
 
 	private static void chestInteraction(Chest c) {
-		if (c.getContentsSize() == 0) {
-			out.println(c.getName() + " is empty");
-		} else {
-			out.println("Inventory:"); // Print inventory
-			for (int i = 0; i < c.getContentsSize(); i++) {
-				out.print((i + 1) + ") " + c.getContent(i).getName());
-				out.println();
-			}
-		}
-		out.println();
 		int choice = 0;
 		do { // Inventory loop
+			if (c.getContentsSize() == 0) {
+				out.println(c.getName() + " is empty");
+			} else {
+				out.println("Inventory:"); // Print inventory
+				for (int i = 0; i < c.getContentsSize(); i++) {
+					out.print((i + 1) + ") " + c.getContent(i).getName());
+					out.println();
+				}
+			}
+			out.println();
 			do { // Force an acceptable input
 				out.println("1) Get information");
 				out.println("2) Take item");
@@ -314,6 +329,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 			} while (!(choice >= 1 && choice <= 3) && (choice != 99));
 
 			int loc = -1;
+			
 			if (choice == 2 || choice == 1) {
 				do { // Select item, forces acceptable int
 					out.println("Item # (enter 0 to go back): ");
@@ -327,8 +343,8 @@ public class Quarter_3_Project extends JFrame { // Main method class
 					}
 				} while (!(loc >= 0 && loc <= c.getContentsSize()));
 			}
-
-			if (choice == 3) {
+			else if (choice == 3) {
+				
 				out.println("Your inventory:"); // Print inventory
 				for (int i = 0; i < player.getInventorySize(); i++) {
 					out.print((i + 1) + ") " + player.getContent(i).getName());
@@ -344,18 +360,20 @@ public class Quarter_3_Project extends JFrame { // Main method class
 						loc = k.nextInt();
 					} catch (Exception e) {
 					}
-					if (!(loc >= 0 && loc <= player.getInventorySize()) && (choice != -1)) {
+					if (!(loc >= 0 && loc <= player.getInventorySize())) {
 						out.println("Invalid input");
 					}
-					if (player.getWeapon() == player.getContent(loc)) {
+					if (player.getWeapon() == player.getContent(loc-1)) {
 						out.println("You can't put that in there!");
+						loc = -1;
 					}
-				} while (!(loc >= 0 && loc <= player.getInventorySize()));
+				} while (!(loc >= 0 && loc <= player.getInventorySize() + 1));
 
 			}
 
 			if (loc != 0) {
 				loc--; // Because arrays start with 0
+				out.clear();
 				switch (choice) {
 				case 1: // Output description and info
 					out.println(c.getContent(loc).getName() + ": " + c.getContent(loc).getDescription());
@@ -500,7 +518,10 @@ public class Quarter_3_Project extends JFrame { // Main method class
 		currentMap.addWall(2, 5);
 		currentMap.addWall(2, 6);
 		currentMap.addWall(2, 7);
-		currentMap.addEntity(new Enemy("Enemy"), 1, 4);
+		// currentMap.addEntity(new Enemy("Enemy"), 1, 4);
+		Chest c = new Chest("Chest");
+		c.addContent(new Potion("Magic Elixer", 2, 15, "Regenerates 15 MP"));
+		currentMap.addStationary(c, 5, 5);
 	}
 
 	private static void doorwaySetup() {
@@ -564,7 +585,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 			try {
 				out.println("Name of load file: ");
 				nameOfFile = k.next();
-				fileMaker = new File(nameOfFile + ".save");
+				fileMaker = new File("Saves" + File.separator + nameOfFile + ".save");
 				if (fileMaker.createNewFile()) {
 					out.println("That file does not exist!");
 					nameOfFile = "";

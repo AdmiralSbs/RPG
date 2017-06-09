@@ -12,7 +12,6 @@ public class Map implements Serializable{ //The big one
    private ArrayList<Entity> entities; //Holds all the entities
    private ArrayList<Stationary> stationaries; //Holds all the stationaries
    private Entity placeholder; //Empty spot in locations
-//private int ID; //Probably useless
    private Stationary currentOverlap; //Doorways are complicated
    private int playerOn;
 
@@ -34,14 +33,6 @@ public class Map implements Serializable{ //The big one
       out = s1;
       outD = s2;
    }
-
-/*public void setID(int id) { //Probably useless
-   ID = id;
-}
-
-public int getID() { //Probably useless
-   return ID;
-}*/
 
    public int getHeight() {
       return height;
