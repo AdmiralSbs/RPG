@@ -1,8 +1,10 @@
 package io.github.AdmiralSbs.RPG;
 
 import java.util.*;
+import java.awt.event.ActionEvent;
 import java.io.*;
 import javax.swing.*;
+import javax.jnlp.*;
 
 public class Quarter_3_Project extends JFrame { // Main method class
 
@@ -29,14 +31,21 @@ public class Quarter_3_Project extends JFrame { // Main method class
 		Map mSetUp = new Map(out, new SuperOutput(gui.getDisplayOut()));
 		setUp = null;
 		mSetUp = null;
+		int waofc = JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
+		String[] chars = {"W", "S", "A", "D", "Q", "E", "X", "1", "2", "3", "4", "5", "6", "7", "8", "9", "ESCAPE"};
+		for (int i = 0; i < chars.length; i++) {
+			gui.getInputMap(waofc).put(KeyStroke.getKeyStroke(chars[i]), chars[i]);
+			gui.getActionMap().put(chars[i], new KeyGetter(chars[i]));
+		}
 		setVisible(true);
 	}
 
 	public static void main(String[] args) throws IOException {
 		int choice = -1;
+		game.getContentPane().requestFocusInWindow();
 		out.println("1) New game");
 		out.println("2) Load game");
-		do {
+		/*do {
 			try {
 				choice = k.nextInt();
 			} catch (Exception e) {
@@ -45,12 +54,14 @@ public class Quarter_3_Project extends JFrame { // Main method class
 			if (choice != 1 && choice != 2) {
 				out.println("Invalid input");
 			}
-		} while (choice != 1 && choice != 2);
+		} while (choice != 1 && choice != 2);*/
+		choice = Integer.parseInt(k.getCode("1", "2"));
 		if (choice == 2) {
 			loadGame();
 			out.clear();
 		} else {// Choice == 1
 			loadMaps(); // Sets up the maps
+			((RPGui) game.getContentPane()).getInput().requestFocusInWindow();
 			out.println("Enter player name: ");
 			String name = "";
 			name = k.nextLine();
@@ -74,29 +85,41 @@ public class Quarter_3_Project extends JFrame { // Main method class
 		}
 		System.exit(0);
 	}
-
+	
+	private class KeyGetter extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		private String code;
+		
+		public KeyGetter(String i) {
+			code = i;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			k.sendCode(code);
+		}
+		
+	}
+	
 	// Other methods
 	private static void movingSystem() { // Allows player to move within map
-		int choice = -1;
+		String choiceS = "";
 		do {
-			choice = -1;
-			String choiceS = null;
-			out.println("1) Move up");
-			out.println("2) Move right");
-			out.println("3) Move down");
-			out.println("4) Move left");
-			out.println("5) Check stats");
-			out.println("6) Check inventory");
+			out.println("W) Move up");
+			out.println("A) Move left");
+			out.println("S) Move down");
+			out.println("D) Move right");
+			out.println("Q) Check stats");
+			out.println("E) Check inventory");
 			if (currentMap.getPlayerOn() == 1) {
-				out.println("11) Enter doorway");
+				out.println("X) Enter doorway");
 			} else if (currentMap.getPlayerOn() == 2) {
-				out.println("11) Heal");
+				out.println("X) Heal");
 			} else if (currentMap.getPlayerOn() == 3) {
-				out.println("11) Use chest");
+				out.println("X) Use chest");
 			}
-			out.println("99) End game");
+			out.println("Esc) End game");
 
-			boolean good = false;
+			/*boolean good = false;
 			do { // Takes in input, forces an int to continue (unless
 					// cheatcode42)
 				try {
@@ -116,45 +139,49 @@ public class Quarter_3_Project extends JFrame { // Main method class
 					if (!choiceS.equals("cheatcode42"))
 						out.println("Invalid Input\n");
 				}
-			} while (!good);
-
+			} while (!good);*/
+			game.getContentPane().requestFocusInWindow();
+			if (currentMap.getPlayerOn() > 0)
+				choiceS = k.getCode("W", "S", "A", "D", "Q", "E", "X", "ESCAPE");
+			else
+				choiceS = k.getCode("W", "S", "A", "D", "Q", "E", "ESCAPE");
 			out.clear();
-			switch (choice) {
-			case 1:
+			switch (choiceS) {
+			case "W":
 				if (player.getY() > 1) {
 					currentMap.moveUp(player);
 				} else {
 					out.println("Error: can't move in that direction");
 				}
 				break;
-			case 2:
+			case "D":
 				if (player.getX() < currentMap.getWidth()) {
 					currentMap.moveRight(player);
 				} else {
 					out.println("Error: can't move in that direction");
 				}
 				break;
-			case 3:
+			case "S":
 				if (player.getY() < currentMap.getHeight()) {
 					currentMap.moveDown(player);
 				} else {
 					out.println("Error: can't move in that direction");
 				}
 				break;
-			case 4:
+			case "A":
 				if (player.getX() > 1) {
 					currentMap.moveLeft(player);
 				} else {
 					out.println("Error: can't move in that direction");
 				}
 				break;
-			case 5:
+			case "Q":
 				player.printStats();
 				break;
-			case 6:
+			case "E":
 				inventoryManagement(); // In a method to make things simpler
 				break;
-			case 11:
+			case "X":
 				if (currentMap.getPlayerOn() == 1) { // Transfer player from one
 														// map to another
 					currentMap.removeEntity(player);
@@ -173,29 +200,25 @@ public class Quarter_3_Project extends JFrame { // Main method class
 				} else
 					out.println("Invalid input");
 				break;
-			case 99:
+			case "ESCAPE":
 				break;
 			default:
 				out.println("Invalid input");
 				break;
 			}
 			out.println();
-		} while (player.getHP() > 0 && (choice != 99));
+		} while (player.getHP() > 0 && (!choiceS.equals("ESCAPE")));
 	}
 
 	private static void inventoryManagement() {
 		if (player.getInventorySize() == 0) {
-			out.println("It appears that you don't have any items..."); // Making
-																		// sure
-																		// you
-																		// have
-																		// items
-			return;
+			out.println("It appears that you don't have any items...");
+			return; // Making sure you have items
 		}
 
-		int choice = 0;
+		String choiceS = "";
 		do { // Inventory loop
-			do { // Force an acceptable input
+			//do { // Force an acceptable input
 				out.println("Inventory:"); // Print inventory
 				for (int i = 0; i < player.getInventorySize(); i++) {
 					out.print((i + 1) + ") " + player.getContent(i).getName());
@@ -210,18 +233,19 @@ public class Quarter_3_Project extends JFrame { // Main method class
 				out.println("3) Use");
 				out.println("4) Discard");
 				out.println("99) Exit inventory");
-				choice = 0;
-				try {
+				choiceS = k.getCode("1", "2", "3", "4", "ESCAPE");
+				/*try {
 					choice = k.nextInt();
 				} catch (Exception e) {
 				}
 				if (!(choice >= 1 && choice <= 4) && (choice != 99) && (choice != -1)) {
 					out.println("Invalid input");
 				}
-			} while (!(choice >= 1 && choice <= 4) && (choice != 99));
+			} while (!(choice >= 1 && choice <= 4) && (choice != 99));*/
 
 			int loc = -1;
-			if (choice != 99) {
+			if (!choiceS.equals("ESCAPE")) {
+				((RPGui) game.getContentPane()).getInput().requestFocusInWindow();
 				do { // Select item, forces acceptable int
 					out.println("Item # (enter 0 to go back): ");
 					loc = -1;
@@ -237,8 +261,8 @@ public class Quarter_3_Project extends JFrame { // Main method class
 			if (loc != 0) {
 				loc -= 1; // Because arrays start with 0
 				out.clear();
-				switch (choice) {
-				case 1: // Output description and info
+				switch (choiceS) {
+				case "1": // Output description and info
 					out.println(player.getContent(loc).getName() + ": " + player.getContent(loc).getDescription());
 					if (player.getContent(loc) instanceof Weapon) {
 						Weapon w = (Weapon) player.getContent(loc);
@@ -256,14 +280,14 @@ public class Quarter_3_Project extends JFrame { // Main method class
 						}
 					}
 					break;
-				case 2: // Assign weapon
+				case "2": // Assign weapon
 					if (player.getContent(loc) instanceof Weapon) {
 						Weapon w = (Weapon) player.getContent(loc);
 						player.assignWeapon(w);
 					} else
 						out.println("That item cannot be equiped");
 					break;
-				case 3: // Nothing can be used, so...
+				case "3": // Nothing can be used, so...
 					if (player.getContent(loc) instanceof Usable) {
 						out.println("Are you sure?  Type anything to confirm: ");
 						String y = k.nextLine();
@@ -275,7 +299,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 					} else
 						out.println("That item cannot be used");
 					break;
-				case 4:
+				case "4":
 					out.println("Are you sure?  Type anything to confirm: ");
 					String y = k.nextLine();
 					if (!y.equals("")) {
@@ -283,10 +307,10 @@ public class Quarter_3_Project extends JFrame { // Main method class
 					}
 					break;
 				}
-				if (choice != 99)
+				if (!choiceS.equals("ESCAPE"))
 					out.println();
 			}
-		} while (choice != 99);
+		} while (!choiceS.equals("ESCAPE"));
 
 		// Finished with inventory
 	}
@@ -329,7 +353,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 			} while (!(choice >= 1 && choice <= 3) && (choice != 99));
 
 			int loc = -1;
-			
+
 			if (choice == 2 || choice == 1) {
 				do { // Select item, forces acceptable int
 					out.println("Item # (enter 0 to go back): ");
@@ -342,9 +366,8 @@ public class Quarter_3_Project extends JFrame { // Main method class
 						out.println("Invalid input");
 					}
 				} while (!(loc >= 0 && loc <= c.getContentsSize()));
-			}
-			else if (choice == 3) {
-				
+			} else if (choice == 3) {
+
 				out.println("Your inventory:"); // Print inventory
 				for (int i = 0; i < player.getInventorySize(); i++) {
 					out.print((i + 1) + ") " + player.getContent(i).getName());
@@ -363,7 +386,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 					if (!(loc >= 0 && loc <= player.getInventorySize())) {
 						out.println("Invalid input");
 					}
-					if (player.getWeapon() == player.getContent(loc-1)) {
+					if (player.getWeapon() == player.getContent(loc - 1)) {
 						out.println("You can't put that in there!");
 						loc = -1;
 					}
@@ -412,8 +435,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 
 	}
 
-	private static void cheating() {// For "debugging" (it works as both, why
-									// not?)
+	private static void cheating() {// For "debugging"
 		out.println("\nWelcome to the debugging system!  Here, you can");
 		out.println("all the cool things I either:");
 		out.println("1) Not hardcoded into the game");
@@ -487,16 +509,10 @@ public class Quarter_3_Project extends JFrame { // Main method class
 		out.println();
 	}
 
-	/*
-	 * private static void updateMapIDs() { //Probably does nothing, don't worry
-	 * about it for (int i = 0; i < maps.size(); i++) { maps.get(i).setID(i); }
-	 * }
-	 */
 	// This is all setup stuff that happens
 	private static void loadMaps() {
 		loadMap1();
 		loadMap2();
-		// updateMapIDs();
 		doorwaySetup();
 		currentMap = maps.get(0);
 	}
@@ -540,7 +556,7 @@ public class Quarter_3_Project extends JFrame { // Main method class
 			try {
 				out.println("Name of save file: ");
 				nameOfFile = k.next();
-				fileMaker = new File(nameOfFile + ".save");
+				fileMaker = new File("Saves" + File.separator + nameOfFile + ".save");
 				if (!fileMaker.createNewFile()) {
 					out.println("That save already exists, do you want to overwrite it?");
 					out.println("Enter anything to confirm: ");
@@ -573,7 +589,6 @@ public class Quarter_3_Project extends JFrame { // Main method class
 			 * writer.writeObject(statAL.get(k)); }
 			 */
 		}
-		// writer.writeObject(obj);
 		writer.close();
 
 	}
@@ -614,5 +629,4 @@ public class Quarter_3_Project extends JFrame { // Main method class
 		reader.close();
 		currentMap = maps.get(cur);
 	}
-
 }
