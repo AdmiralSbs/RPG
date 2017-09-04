@@ -13,10 +13,10 @@ public class Entity extends Item implements Serializable {
 	protected int defense;
 	protected Entity target;
 	protected Weapon weapon; // The last few are for equipment
-	protected int maxHPTotal;
-	protected int maxMPTotal;
-	protected int attackTotal;
-	protected int defenseTotal;
+	/*protected int getMaxHPTotal();
+	protected int getMaxMPTotal();
+	protected int getAttackTotal();
+	protected int getDefenseTotal();*/
 
 	public Entity() {
 		name = "Entity";
@@ -56,9 +56,8 @@ public class Entity extends Item implements Serializable {
 		maxMP = (int) (Math.random() * 21) + 10;
 		attack = (int) (Math.random() * 11) + 5;
 		defense = (int) (Math.random() * 11) + 5;
-		updateTotal();
-		HP = maxHPTotal;
-		MP = maxMPTotal;
+		HP = getMaxHPTotal();
+		MP = getMaxMPTotal();
 	}
 
 	public void printStats() {
@@ -93,32 +92,38 @@ public class Entity extends Item implements Serializable {
 		return MP;
 	}
 
-	public int getMaxMP() {
-		return maxMP;
-	}
+	public int getMaxMP() { return maxMP; }
 
-	public int getAttack() {
-		return attack;
-	}
+	public int getAttack() { return attack; }
 
-	public int getDefense() {
-		return defense;
-	}
+	public int getDefense() { return defense; }
 
 	public int getMaxHPTotal() {
-		return maxHPTotal;
+		if (weapon != null)
+		    return maxHP + weapon.getHPChange();
+		else
+		    return maxHP;
 	}
 
 	public int getMaxMPTotal() {
-		return maxMPTotal;
+        if (weapon != null)
+            return maxMP + weapon.getMPChange();
+        else
+            return maxMP;
 	}
 
 	public int getAttackTotal() {
-		return attackTotal;
+        if (weapon != null)
+            return attack + weapon.getAttackChange();
+        else
+            return attack;
 	}
 
 	public int getDefenseTotal() {
-		return defenseTotal;
+        if (weapon != null)
+            return defense + weapon.getDefenseChange();
+        else
+            return defense;
 	}
 
 	public Entity getTarget() {
@@ -137,8 +142,8 @@ public class Entity extends Item implements Serializable {
 
 	public void heal() {
 		HP += 20;
-		if (HP >= maxHPTotal) {
-			HP = maxHPTotal;
+		if (HP >= getMaxHPTotal()) {
+			HP = getMaxHPTotal();
 			out.println(name + " healed to max HP");
 		} else
 			out.println(name + " healed 20 HP");
@@ -152,12 +157,12 @@ public class Entity extends Item implements Serializable {
 		if (roll < 0.1)
 			out.println("The attack missed!");
 		else if (roll > 0.9) {
-			int damage = (int) (2 * Math.max(1, attackTotal * ((Math.random() * 1.5) + .5) - target.getDefenseTotal()));
+			int damage = (int) (2 * Math.max(1, getAttackTotal() * ((Math.random() * 1.5) + .5) - target.getDefenseTotal()));
 			out.println("Critical hit!");
 			target.subtractHP(damage);
 			out.println(this.name + " did " + damage + " to " + target.getName());
 		} else {
-			int damage = (int) Math.max(1, this.attackTotal * ((Math.random() * 1.5) + .5) - target.getDefenseTotal());
+			int damage = (int) Math.max(1, this.getAttackTotal() * ((Math.random() * 1.5) + .5) - target.getDefenseTotal());
 			target.subtractHP(damage);
 			out.println(this.name + " did " + damage + " to " + target.getName());
 		}
@@ -166,7 +171,7 @@ public class Entity extends Item implements Serializable {
 
 	public void fireball(Entity target) {
 		out.println(this.name + " fireballed " + target.getName());
-		int damage = (int) (attackTotal * ((Math.random() + 1)));
+		int damage = (int) (getAttackTotal() * ((Math.random() + 1)));
 		target.subtractHP(damage);
 		out.println(this.name + " did " + damage + " to " + target.getName());
 		out.println();
@@ -178,8 +183,8 @@ public class Entity extends Item implements Serializable {
 	}
 
 	public void restore() { // Full heal
-		HP = maxHPTotal;
-		MP = maxMPTotal;
+		HP = getMaxHPTotal();
+		MP = getMaxMPTotal();
 		out.println(name + " is fully restored!");
 	}
 
@@ -188,7 +193,6 @@ public class Entity extends Item implements Serializable {
 		if (weapon == null) {
 			weapon = w;
 			out.println(name + " equiped " + w.getName());
-			updateTotal();
 		} else if (weapon == w)
 			out.println("You already have this weapon equipped");
 		else {
@@ -198,26 +202,25 @@ public class Entity extends Item implements Serializable {
 			if (in.equals("")) {
 				weapon = w;
 				out.println(name + " equiped " + w.getName());
-				updateTotal();
 			} else
 				out.println("Weapon was not changed");
 		}
 	}
 
-	public void updateTotal() { // Updates totals
+	/* public void updateTotal() { // Updates totals
 		if (weapon != null) {
-			maxHPTotal = maxHP + weapon.getHPChange();
-			maxMPTotal = maxMP + weapon.getMPChange();
-			attackTotal = attack + weapon.getAttackChange();
-			defenseTotal = defense + weapon.getDefenseChange();
+			getMaxHPTotal() = maxHP + weapon.getHPChange();
+			getMaxMPTotal() = maxMP + weapon.getMPChange();
+			getAttackTotal() = attack + weapon.getAttackChange();
+			getDefenseTotal() = defense + weapon.getDefenseChange();
 		} else {
-			maxHPTotal = maxHP;
-			maxMPTotal = maxMP;
-			attackTotal = attack;
-			defenseTotal = defense;
+			getMaxHPTotal() = maxHP;
+			getMaxMPTotal() = maxMP;
+			getAttackTotal() = attack;
+			getDefenseTotal() = defense;
 		}
-	}
-	
+	} */
+
 	public void editStat(int i, int p) {
 		switch (i) {
 		case Potion.HP:
@@ -247,6 +250,5 @@ public class Entity extends Item implements Serializable {
 		default:
 			System.err.println("Attempted to edit unknown stat");
 		}
-		updateTotal();
 	}
 }
