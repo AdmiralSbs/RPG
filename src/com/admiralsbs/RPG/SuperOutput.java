@@ -5,7 +5,7 @@ import javax.swing.*;
 public class SuperOutput extends JPanel {
 
     private static final long serialVersionUID = 3L;
-    private JTextArea source;
+    private final JTextArea source;
 
     public SuperOutput(JTextArea source) {
         this.source = source;

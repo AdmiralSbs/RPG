@@ -21,7 +21,7 @@ public class Healer extends Stationary implements Serializable {
         healerConstructor(n, x, y);
     }
 
-    public void healerConstructor(String n, int x, int y) {
+    private void healerConstructor(String n, int x, int y) {
         assignCoords(x, y);
         letter = 'H';
         name = n;

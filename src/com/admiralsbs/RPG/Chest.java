@@ -1,10 +1,10 @@
 package com.admiralsbs.RPG;
 
-import java.util.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Chest extends Stationary implements Serializable {
-    private ArrayList<Handheld> contents = new ArrayList<Handheld>();
+    private ArrayList<Handheld> contents = new ArrayList<>();
     private static final long serialVersionUID = -9L;
 
     public Chest() {

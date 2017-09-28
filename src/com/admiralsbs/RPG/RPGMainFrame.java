@@ -1,9 +1,9 @@
 package com.admiralsbs.RPG;
 
-import java.util.*;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
-import javax.swing.*;
+import java.util.ArrayList;
 
 public class RPGMainFrame extends JFrame { // Main method class
 
@@ -11,7 +11,7 @@ public class RPGMainFrame extends JFrame { // Main method class
     private static RPGMainFrame game = new RPGMainFrame();
     private static SuperScanner k;
     private static SuperOutput out;
-    private static ArrayList<Map> maps = new ArrayList<Map>(); // Holds maps
+    private static ArrayList<Map> maps = new ArrayList<>(); // Holds maps
     private static Map currentMap; // Allows program to know where the player is
     private static Player player; // Interact with player throughout program
 
@@ -75,7 +75,7 @@ public class RPGMainFrame extends JFrame { // Main method class
 
     private class KeyGetter extends AbstractAction {
         private static final long serialVersionUID = 1L;
-        private String code;
+        private final String code;
 
         public KeyGetter(String i) {
             code = i;
@@ -210,7 +210,7 @@ public class RPGMainFrame extends JFrame { // Main method class
                     loc = -1;
                     try {
                         loc = k.nextInt();
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                     if (!(loc >= 0 && loc <= player.getInventorySize()) && loc != -1) {
                         out.println("Invalid input");
@@ -295,7 +295,7 @@ public class RPGMainFrame extends JFrame { // Main method class
                 choice = 0;
                 try {
                     choice = k.nextInt();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 if (!(choice >= 1 && choice <= 3) && (choice != 99) && (choice != -1)) {
                     out.println("Invalid input");
@@ -319,7 +319,7 @@ public class RPGMainFrame extends JFrame { // Main method class
                     loc = -1;
                     try {
                         loc = k.nextInt();
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                     if (!(loc >= 0 && loc <= c.getContentsSize())) {
                         out.println("Invalid input");
@@ -340,7 +340,7 @@ public class RPGMainFrame extends JFrame { // Main method class
                     loc = -1;
                     try {
                         loc = k.nextInt();
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                     if (!(loc >= 0 && loc <= player.getInventorySize())) {
                         out.println("Invalid input");

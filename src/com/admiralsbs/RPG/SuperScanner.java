@@ -1,11 +1,13 @@
 package com.admiralsbs.RPG;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+@SuppressWarnings("StatementWithEmptyBody")
 public class SuperScanner implements ActionListener {
 
-    private JTextField systemIn;
+    private final JTextField systemIn;
     private volatile boolean ready = false;
     private volatile String code;
     private int waiting = 0;

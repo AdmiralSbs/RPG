@@ -42,7 +42,7 @@ public class Entity extends Item implements Serializable {
 		assignCoords(x, y);
 	}
 
-	public void initializeStats() {
+	private void initializeStats() {
 		maxHP = (int) (Math.random() * 21) + 40;
 		maxMP = (int) (Math.random() * 21) + 10;
 		attack = (int) (Math.random() * 11) + 5;
@@ -183,7 +183,7 @@ public class Entity extends Item implements Serializable {
 											// possible situations
 		if (weapon == null) {
 			weapon = w;
-			out.println(name + " equiped " + w.getName());
+			out.println(name + " equipped " + w.getName());
 		} else if (weapon == w)
 			out.println("You already have this weapon equipped");
 		else {
@@ -192,7 +192,7 @@ public class Entity extends Item implements Serializable {
 			String in = k.nextLine();
 			if (in.equals("")) {
 				weapon = w;
-				out.println(name + " equiped " + w.getName());
+				out.println(name + " equipped " + w.getName());
 			} else
 				out.println("Weapon was not changed");
 		}

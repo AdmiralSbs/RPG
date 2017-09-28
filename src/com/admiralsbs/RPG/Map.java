@@ -1,7 +1,8 @@
 package com.admiralsbs.RPG;
 
-import java.util.*;  //entities.get(loc).getY() (in case I need it again)
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Map implements Serializable { //The big one
     private static final long serialVersionUID = -1L;
@@ -20,8 +21,8 @@ public class Map implements Serializable { //The big one
         height = h;
         width = w;
         locations = new Item[w + 1][h + 1];
-        entities = new ArrayList<Entity>();
-        stationaries = new ArrayList<Stationary>();
+        entities = new ArrayList<>();
+        stationaries = new ArrayList<>();
         placeholder = new Entity("%$()@&)(*#*@%()$&#()@DFHUVON$r93v80qmwdzl4t3");
         for (int i = 1; i < w + 1; i++) {
             Arrays.fill(locations[i], placeholder);

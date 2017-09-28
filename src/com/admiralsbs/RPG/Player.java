@@ -1,13 +1,13 @@
 package com.admiralsbs.RPG;
 
-import java.util.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Player extends Entity implements Serializable {
     private static final long serialVersionUID = -4L;
     private int XP;
     private int level;
-    private ArrayList<Handheld> inventory = new ArrayList<Handheld>(); //Inventory
+    private ArrayList<Handheld> inventory = new ArrayList<>(); //Inventory
 
     public Player() {
         super("Player");
@@ -51,7 +51,7 @@ public class Player extends Entity implements Serializable {
         }
     }
 
-    public void takeTurn() {
+    private void takeTurn() {
         int choice;
         do {
             do { //Forces a possible move
