@@ -30,7 +30,7 @@ public class Map implements Serializable { //The big one
         currentOverlap = null;
     }
 
-    public Map(SuperOutput s1, SuperOutput s2) {
+    public static void setOutputs(SuperOutput s1, SuperOutput s2) {
         out = s1;
         outD = s2;
     }

@@ -24,10 +24,8 @@ public class RPGMainFrame extends JFrame { // Main method class
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         k = new SuperScanner(gui.getInput());
         out = new SuperOutput(gui.getPrintOut());
-        @SuppressWarnings("unused")
-        Item setUp = new Item(k, out);
-        @SuppressWarnings("unused")
-        Map mSetUp = new Map(out, new SuperOutput(gui.getDisplayOut()));
+        Item.setInputOutput(k, out);
+        Map.setOutputs(out, new SuperOutput(gui.getDisplayOut()));
         int waofc = JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
         String[] chars = {"W", "S", "A", "D", "Q", "E", "X", "1", "2", "3", "4", "5", "6", "7", "8", "9", "ESCAPE"};
         for (String aChar : chars) {
@@ -109,27 +107,6 @@ public class RPGMainFrame extends JFrame { // Main method class
             }
             out.println("Esc) End game");
 
-			/*boolean good = false;
-			do { // Takes in input, forces an int to continue (unless
-					// cheatcode42)
-				try {
-					good = false;
-					choiceS = k.nextLine();
-					// out.println(choiceS);
-					if (choiceS.equals("cheatcode42")) {
-						cheating(); // Send to debugging system
-						choice = 0;
-						good = true;
-					} else {
-						choice = Integer.parseInt(choiceS);
-						if (choice != -1)
-							good = true;
-					}
-				} catch (Exception e) {
-					if (!choiceS.equals("cheatcode42"))
-						out.println("Invalid Input\n");
-				}
-			} while (!good);*/
             game.getContentPane().requestFocusInWindow();
             if (currentMap.getPlayerOn() > 0)
                 choiceS = k.getCode("W", "S", "A", "D", "Q", "E", "X", "ESCAPE");
@@ -224,14 +201,6 @@ public class RPGMainFrame extends JFrame { // Main method class
             out.println("4) Discard");
             out.println("99) Exit inventory");
             choiceS = k.getCode("1", "2", "3", "4", "ESCAPE");
-				/*try {
-					choice = k.nextInt();
-				} catch (Exception e) {
-				}
-				if (!(choice >= 1 && choice <= 4) && (choice != 99) && (choice != -1)) {
-					out.println("Invalid input");
-				}
-			} while (!(choice >= 1 && choice <= 4) && (choice != 99));*/
 
             int loc = -1;
             if (!choiceS.equals("ESCAPE")) {
@@ -566,13 +535,6 @@ public class RPGMainFrame extends JFrame { // Main method class
         writer.writeObject(player);
         for (Map cMap : maps) {
             writer.writeObject(cMap);
-            /*
-			 * ArrayList<Entity> entAL = cMap.getEntities();
-			 * ArrayList<Stationary> statAL = cMap.getStationaries(); for (int k
-			 * = 0; k < entAL.size(); k++) { writer.writeObject(entAL.get(k)); }
-			 * for (int k = 0; k < statAL.size(); k++) {
-			 * writer.writeObject(statAL.get(k)); }
-			 */
         }
         writer.close();
 

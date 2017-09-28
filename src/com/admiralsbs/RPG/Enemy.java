@@ -8,24 +8,25 @@ public class Enemy extends Entity implements Serializable {
 
     public Enemy() {
         super("Enemy");
-        letter = 'E';
-        calcXP();
+        enemyConstructor();
     }
 
     public Enemy(String nm) {
         super(nm);
-        letter = 'E';
-        calcXP();
+        enemyConstructor();
     }
 
     public Enemy(int x, int y) {
         super("Enemy", x, y);
-        letter = 'E';
-        calcXP();
+        enemyConstructor();
     }
 
     public Enemy(String nm, int x, int y) {
         super(nm, x, y);
+        enemyConstructor();
+    }
+
+    private void enemyConstructor() {
         letter = 'E';
         calcXP();
     }

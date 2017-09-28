@@ -19,31 +19,22 @@ public class Entity extends Item implements Serializable {
 	protected int getDefenseTotal();*/
 
 	public Entity() {
-		name = "Entity";
-		initializeStats();
-		target = null;
-		weapon = null;
-		letter = '\u2022';
-		assignCoords(0, 0);
+	    entityConstructor("Entity", 0, 0);
 	}
 
 	public Entity(String nm) {
-		name = nm;
-		initializeStats();
-		target = null;
-		letter = '\u2022';
-		assignCoords(0, 0);
+		entityConstructor(nm, 0, 0);
 	}
 
 	public Entity(int x, int y) {
-		name = "Entity";
-		initializeStats();
-		target = null;
-		letter = '\u2022';
-		assignCoords(x, y);
+		entityConstructor("Entity", x, y);
 	}
 
 	public Entity(String nm, int x, int y) {
+		entityConstructor(nm, x, y);
+	}
+
+	private void entityConstructor(String nm, int x, int y) {
 		name = nm;
 		initializeStats();
 		target = null;
@@ -206,20 +197,6 @@ public class Entity extends Item implements Serializable {
 				out.println("Weapon was not changed");
 		}
 	}
-
-	/* public void updateTotal() { // Updates totals
-		if (weapon != null) {
-			getMaxHPTotal() = maxHP + weapon.getHPChange();
-			getMaxMPTotal() = maxMP + weapon.getMPChange();
-			getAttackTotal() = attack + weapon.getAttackChange();
-			getDefenseTotal() = defense + weapon.getDefenseChange();
-		} else {
-			getMaxHPTotal() = maxHP;
-			getMaxMPTotal() = maxMP;
-			getAttackTotal() = attack;
-			getDefenseTotal() = defense;
-		}
-	} */
 
 	public void editStat(int i, int p) {
 		switch (i) {

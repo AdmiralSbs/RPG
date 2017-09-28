@@ -32,15 +32,9 @@ public class RPGui extends JPanel {
         IOPanel.add(input);
         add(displayPanel);
         add(IOPanel);
-        /*
-		 * add(displayOut); add(printOut); add(input);
-		 */
-
     }
 
-    public void setSuperScanner(SuperScanner k) {
-        input.addActionListener(k);
-    }
+    //public void setSuperScanner(SuperScanner k) { input.addActionListener(k); }
 
     public JTextArea getPrintOut() {
         return printOut;

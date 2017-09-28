@@ -6,24 +6,22 @@ public class Healer extends Stationary implements Serializable {
     private static final long serialVersionUID = -7L;
 
     public Healer() {
-        assignCoords(0, 0);
-        letter = 'H';
-        name = "Healer";
+        healerConstructor("Healer", 0, 0);
     }
 
     public Healer(int x, int y) {
-        assignCoords(x, y);
-        letter = 'H';
-        name = "Healer";
+        healerConstructor("Healer", x, y);
     }
 
     public Healer(String n) {
-        assignCoords(0, 0);
-        letter = 'H';
-        name = n;
+        healerConstructor(n, 0, 0);
     }
 
     public Healer(String n, int x, int y) {
+        healerConstructor(n, x, y);
+    }
+
+    public void healerConstructor(String n, int x, int y) {
         assignCoords(x, y);
         letter = 'H';
         name = n;

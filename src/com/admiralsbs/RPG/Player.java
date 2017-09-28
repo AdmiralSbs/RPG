@@ -11,27 +11,25 @@ public class Player extends Entity implements Serializable {
 
     public Player() {
         super("Player");
-        letter = 'P';
-        XP = 0;
-        level = 1;
+        playerConstructor();
     }
 
     public Player(String nm) {
         super(nm);
-        letter = 'P';
-        XP = 0;
-        level = 1;
+        playerConstructor();
     }
 
     public Player(int x, int y) {
         super("Player", x, y);
-        letter = 'P';
-        XP = 0;
-        level = 1;
+        playerConstructor();
     }
 
     public Player(String nm, int x, int y) {
         super(nm, x, y);
+        playerConstructor();
+    }
+
+    private void playerConstructor() {
         letter = 'P';
         XP = 0;
         level = 1;
@@ -85,18 +83,11 @@ public class Player extends Entity implements Serializable {
                     attack(getTarget());
                     break;
                 case 3:
-                    /* if (getMP() < 5) { //Probably useless
-                        out.println("You don't have enough MP for that");
-                    } else { */
                     heal();
-                    //}
+
                     break;
                 case 4:
-                    /* if (getMP() < 6) { //Probably useless
-                        out.println("You don't have enough MP for that");
-                    } else { */
                     fireball(getTarget());
-                    //}
                     break;
                 default:
                     out.println("Invalid input");

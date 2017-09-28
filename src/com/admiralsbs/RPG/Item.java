@@ -18,10 +18,7 @@ public class Item implements Serializable {
         letter = '%';
     }
 
-    public Item(SuperScanner s1, SuperOutput s2) {
-        x = 0;
-        y = 0;
-        letter = '%';
+    public static void setInputOutput(SuperScanner s1, SuperOutput s2) {
         k = s1;
         out = s2;
     }

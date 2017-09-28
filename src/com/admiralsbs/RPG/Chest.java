@@ -8,24 +8,22 @@ public class Chest extends Stationary implements Serializable {
     private static final long serialVersionUID = -9L;
 
     public Chest() {
-        assignCoords(0, 0);
-        letter = 'C';
-        name = "Chest";
+        chestConstructor("Chest", 0, 0);
     }
 
     public Chest(int x, int y) {
-        assignCoords(x, y);
-        letter = 'C';
-        name = "Chest";
+        chestConstructor("Chest", x, y);
     }
 
     public Chest(String n) {
-        assignCoords(0, 0);
-        letter = 'C';
-        name = n;
+        chestConstructor(n, 0, 0);
     }
 
     public Chest(String n, int x, int y) {
+        chestConstructor(n, x, y);
+    }
+
+    private void chestConstructor(String n, int x, int y) {
         assignCoords(x, y);
         letter = 'C';
         name = n;
