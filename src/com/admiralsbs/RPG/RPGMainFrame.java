@@ -5,17 +5,17 @@ import java.awt.event.ActionEvent;
 import java.io.*;
 import javax.swing.*;
 
-public class Quarter_3_Project extends JFrame { // Main method class
+public class RPGMainFrame extends JFrame { // Main method class
 
     private static final long serialVersionUID = 1L;
-    private static Quarter_3_Project game = new Quarter_3_Project();
+    private static RPGMainFrame game = new RPGMainFrame();
     private static SuperScanner k;
     private static SuperOutput out;
     private static ArrayList<Map> maps = new ArrayList<Map>(); // Holds maps
     private static Map currentMap; // Allows program to know where the player is
     private static Player player; // Interact with player throughout program
 
-    public Quarter_3_Project() { // Test
+    public RPGMainFrame() { // Test
         setTitle("RPG");
         setSize(1300, 691);
         setLocation(100, 100);
