@@ -5,6 +5,9 @@ import java.io.Serializable;
 public class Stationary extends Item implements Serializable {
     private static final long serialVersionUID = -6L;
     protected String name;
+    public static final int DOORWAY = 1;
+    public static final int HEALER = 2;
+    public static final int CHEST = 3;
 
     public Stationary() {
         assignCoords(0, 0);
