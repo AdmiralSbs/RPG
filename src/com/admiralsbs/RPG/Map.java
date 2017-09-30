@@ -117,17 +117,17 @@ public ArrayList<Stationary> getStationaries() {
             } else if (locations[stationary.getX()][stationary.getY()] instanceof Player) {
                 if (stationary instanceof Doorway) {
                     currentOverlap = stationary;
-                    playerOn = 1;
+                    playerOn = Stationary.DOORWAY;
                     allcheck = true;
                 }
                 if (stationary instanceof Healer) {
                     currentOverlap = stationary;
-                    playerOn = 2;
+                    playerOn = Stationary.HEALER;
                     allcheck = true;
                 }
                 if (stationary instanceof Chest) {
                     currentOverlap = stationary;
-                    playerOn = 3;
+                    playerOn = Stationary.CHEST;
                     allcheck = true;
                 }
             }
@@ -139,56 +139,58 @@ public ArrayList<Stationary> getStationaries() {
     }
 
     private void checkForEntity(Entity e, int dir) { //Before a move finishes, it checks if the
-        int loc = findEntity(e);                   //spot is empty.  Otherwise, it handles it here.
-        if (loc == -1)
+        if (!entities.contains(e))                          //spot is empty.  Otherwise, it handles it here.
             return;
         if (locations[e.getX()][e.getY()] == placeholder) { //It's open, no worries
             display();
             //currentOverlap = null  Shouldn't be needed
-        } else if ((e instanceof Player) && (locations[e.getX()][e.getY()] instanceof Enemy)) { //There's an enemy there, battle
-            Enemy e2 = (Enemy) locations[e.getX()][e.getY()];
-            out.println(e.getName() + " encountered " + e2.getName());
-            Player p = (Player) e;
+        }
+        if (e instanceof Player) {
+            if (locations[e.getX()][e.getY()] instanceof Enemy) { //There's an enemy there, battle
+                Enemy e2 = (Enemy) locations[e.getX()][e.getY()];
+                out.println(e.getName() + " encountered " + e2.getName());
+                Player p = (Player) e;
 
-            p.battle(e2);
-            if (p.getHP() < e2.getHP()) {
-                removeEntity(p);
-            } else {
-                removeEntity(e2);
+                p.battle(e2);
+                if (p.getHP() < e2.getHP()) {
+                    removeEntity(p);
+                } else {
+                    removeEntity(e2);
+                }
+                display();
+            } else if (locations[e.getX()][e.getY()] instanceof Healer) { //There's a healer, cool
+                Healer h = (Healer) locations[e.getX()][e.getY()];
+                out.println(e.getName() + " encountered " + h.getName());
+                //Player p = (Player) e;
+                //p.restore();
+                display();
+            } else if (locations[e.getX()][e.getY()] instanceof Doorway) { //You're on a doorway, cool
+                //currentOverlap = (Doorway) locations[e.getX()][e.getY()];  Shouldn't be needed
+                Doorway d = (Doorway) locations[e.getX()][e.getY()];
+                out.println(e.getName() + " encountered " + d.getName());
+                display();
+            } else if (locations[e.getX()][e.getY()] instanceof Wall) {
+                switch (dir) { //Used to send player back to where they came
+                    case 1:
+                        e.changeY(1);
+                        break;
+                    case 2:
+                        e.changeX(-1);
+                        break;
+                    case 3:
+                        e.changeY(-1);
+                        break;
+                    case 4:
+                        e.changeX(1);
+                        break;
+                }
+                out.println("Error: cannot move in that direction");
+                locateEntities();
+            } else if (locations[e.getX()][e.getY()] instanceof Chest) { //There's a chest, cool
+                Chest c = (Chest) locations[e.getX()][e.getY()];
+                out.println(e.getName() + " encountered " + c.getName());
+                display();
             }
-            display();
-        } else if ((e instanceof Player) && (locations[e.getX()][e.getY()] instanceof Healer)) { //There's a healer, cool
-            Healer h = (Healer) locations[e.getX()][e.getY()];
-            out.println(e.getName() + " encountered " + h.getName());
-            //Player p = (Player) e;
-            //p.restore();
-            display();
-        } else if ((e instanceof Player) && (locations[e.getX()][e.getY()] instanceof Doorway)) { //You're on a doorway, cool
-            //currentOverlap = (Doorway) locations[e.getX()][e.getY()];  Shouldn't be needed
-            Doorway d = (Doorway) locations[e.getX()][e.getY()];
-            out.println(e.getName() + " encountered " + d.getName());
-            display();
-        } else if ((e instanceof Player) && (locations[e.getX()][e.getY()] instanceof Wall)) {
-            switch (dir) { //Used to send player back to where they came
-                case 1:
-                    e.changeY(1);
-                    break;
-                case 2:
-                    e.changeX(-1);
-                    break;
-                case 3:
-                    e.changeY(-1);
-                    break;
-                case 4:
-                    e.changeX(1);
-                    break;
-            }
-            out.println("Error: cannot move in that direction");
-            locateEntities();
-        } else if ((e instanceof Player) && (locations[e.getX()][e.getY()] instanceof Chest)) { //There's a chest, cool
-            Chest c = (Chest) locations[e.getX()][e.getY()];
-            out.println(e.getName() + " encountered " + c.getName());
-            display();
         }
     }
 
@@ -232,8 +234,7 @@ public ArrayList<Stationary> getStationaries() {
     }
 
     public void removeEntity(Entity e) {
-        int loc = findEntity(e);
-        if (loc == -1)
+        if (!entities.contains(e))
             out.println("Error: attempted to remove non-existent entity");
         else {
             locations[e.getX()][e.getY()] = placeholder;
@@ -241,21 +242,15 @@ public ArrayList<Stationary> getStationaries() {
         }
     }
 
-    private int findEntity(Entity e) { //Add, remove, and find used to be complicated because
-        if (entities.contains(e))       //entities was an array, now it's easier, but they stay anyway
-            return entities.indexOf(e);
-        else
-            return -1;
-    }
+ //Add, remove, and find used to be complicated because 
+ //entities was an array, now it's easier, but they stay anyway
 
     public void moveRight(Entity e) {
-        int loc = findEntity(e);
-        if (loc == -1) {
+        if (!entities.contains(e)) {
             out.println("Error: this entity is not in the map");
         } else if (e.getX() < width) {
-            //locations[e.getX()][e.getY()] = placeholder;
-            entities.get(loc).changeX(1);
-            checkForEntity(entities.get(loc), 2);
+            e.changeX(1);
+            checkForEntity(e, 2);
         } else {
             out.println("Error: cannot move in that direction");
         }
@@ -263,13 +258,11 @@ public ArrayList<Stationary> getStationaries() {
     }
 
     public void moveLeft(Entity e) {
-        int loc = findEntity(e);
-        if (loc == -1) {
+        if (!entities.contains(e)) {
             out.println("Error: this entity is not in the map");
         } else if (e.getX() > 1) {
-            //locations[e.getX()][e.getY()] = placeholder;
-            entities.get(loc).changeX(-1);
-            checkForEntity(entities.get(loc), 4);
+            e.changeX(-1);
+            checkForEntity(e, 4);
         } else {
             out.println("Error: cannot move in that direction");
         }
@@ -277,13 +270,11 @@ public ArrayList<Stationary> getStationaries() {
     }
 
     public void moveUp(Entity e) {
-        int loc = findEntity(e);
-        if (loc == -1) {
+        if (!entities.contains(e)) {
             out.println("Error: this entity is not in the map");
         } else if (e.getY() > 1) {
-            //locations[e.getX()][e.getY()] = placeholder;
-            entities.get(loc).changeY(-1);
-            checkForEntity(entities.get(loc), 1);
+            e.changeY(-1);
+            checkForEntity(e, 1);
         } else {
             out.println("Error: cannot move in that direction");
         }
@@ -291,13 +282,11 @@ public ArrayList<Stationary> getStationaries() {
     }
 
     public void moveDown(Entity e) {
-        int loc = findEntity(e);
-        if (loc == -1) {
+        if (!entities.contains(e)) {
             out.println("Error: this entity is not in the map");
         } else if (e.getY() < height) {
-            //locations[e.getX()][e.getY()] = placeholder;
-            entities.get(loc).changeY(1);
-            checkForEntity(entities.get(loc), 3);
+            e.changeY(1);
+            checkForEntity(e, 3);
         } else {
             out.println("Error: cannot move in that direction");
         }
