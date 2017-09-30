@@ -149,7 +149,7 @@ public class RPGMainFrame extends JFrame { // Main method class
                     inventoryManagement(); // In a method to make things simpler
                     break;
                 case "X":
-                    if (currentMap.getPlayerOn() == 1) { // Transfer player from one
+                    if (currentMap.getPlayerOn() == Stationary.DOORWAY) { // Transfer player from one
                         // map to another
                         currentMap.removeEntity(player);
                         Doorway d = (Doorway) currentMap.getCurrentOverlap();
@@ -158,9 +158,9 @@ public class RPGMainFrame extends JFrame { // Main method class
                         currentMap.addEntity(player);
                         currentMap.display();
 
-                    } else if (currentMap.getPlayerOn() == 2) {
+                    } else if (currentMap.getPlayerOn() == Stationary.HEALER) {
                         player.restore();
-                    } else if (currentMap.getPlayerOn() == 3) {
+                    } else if (currentMap.getPlayerOn() == Stationary.CHEST) {
                         Chest c = (Chest) currentMap.getCurrentOverlap();
                         chestInteraction(c);
                         out.clear();
@@ -414,57 +414,54 @@ public class RPGMainFrame extends JFrame { // Main method class
             out.println("X,Y: ");
             String in = k.nextLine();
             String[] vals = in.split(",");
-            Healer en = new Healer(Integer.valueOf(vals[0]), Integer.valueOf(vals[1]));
-            currentMap.addStationary(en);
+            currentMap.addHealer(Integer.valueOf(vals[0]), Integer.valueOf(vals[1]));
             currentMap.display();
         }
     }
 
     private static void weaponChoice() { // Gives player weapon
-        int cho;
         Weapon w = null;
-        do {
-            out.println("Pick your weapon: ");
-            out.println("1) Sword: +2 attack, +2 defense");
-            out.println("2) Axe: +4 attack");
-            out.println("3) Staff: +8 Max MP");
-            out.println("4) Magic Orb: +4 Max HP, +4 Max MP");
-            out.println("5) Shield: +4 defense");
-            cho = Integer.parseInt(k.getCode("1", "2", "3", "4", "5"));
-            out.println();
-            switch (cho) {
-                case 1:
-                    w = new Weapon("Short Sword", 0, 0, 2, 2, "Well used, not much use to it.");
-                    player.addContent(w);
-                    break;
-                case 2:
-                    w = new Weapon("Rusty Axe", 0, 0, 4, 0, "Better for chopping trees");
-                    player.addContent(w);
-                    break;
-                case 3:
-                    w = new Weapon("Rotten Staff", 0, 8, 0, 0, "This looks suspiciously like a branch");
-                    player.addContent(w);
-                    break;
-                case 4:
-                    w = new Weapon("Cracked Magic Orb", 4, 4, 0, 0, "Appears kind of glossy");
-                    player.addContent(w);
-                    break;
-                case 5:
-                    w = new Weapon("Small Shield", 0, 0, 0, 4, "Wait, is this even a weapon?");
-                    player.addContent(w);
-                    break;
-                case -1:
-                    break;
-                default:
-                    out.println("Invalid input");
-            }
-        } while (cho < 1 || cho > 5);
+        //do {
+        out.println("Pick your weapon: ");
+        out.println("1) Sword: +2 attack, +2 defense");
+        out.println("2) Axe: +4 attack");
+        out.println("3) Staff: +8 Max MP");
+        out.println("4) Magic Orb: +4 Max HP, +4 Max MP");
+        out.println("5) Shield: +4 defense");
+        int cho = Integer.parseInt(k.getCode("1", "2", "3", "4", "5"));
+        out.println();
+        switch (cho) {
+            case 1:
+                w = new Weapon("Short Sword", 0, 0, 2, 2, "Well used, not much use to it.");
+                player.addContent(w);
+                break;
+            case 2:
+                w = new Weapon("Rusty Axe", 0, 0, 4, 0, "Better for chopping trees");
+                player.addContent(w);
+                break;
+            case 3:
+                w = new Weapon("Rotten Staff", 0, 8, 0, 0, "This looks suspiciously like a branch");
+                player.addContent(w);
+                break;
+            case 4:
+                w = new Weapon("Cracked Magic Orb", 4, 4, 0, 0, "Appears kind of glossy");
+                player.addContent(w);
+                break;
+            case 5:
+                w = new Weapon("Small Shield", 0, 0, 0, 4, "Wait, is this even a weapon?");
+                player.addContent(w);
+                break;
+            //default:
+            //    out.println("Invalid input");
+        }
+        //} while (cho < 1 || cho > 5);
         out.clear();
         player.assignWeapon(w);
         out.println();
     }
 
     // This is all setup stuff that happens
+
     private static void loadMaps() {
         loadMap1();
         loadMap2();
@@ -511,7 +508,7 @@ public class RPGMainFrame extends JFrame { // Main method class
             try {
                 out.println("Name of save file: ");
                 nameOfFile = k.next();
-                fileMaker = new File("Saves" + File.separator + nameOfFile + ".save");
+                fileMaker = new File("Saves" + File.separator + nameOfFile + ".rpgsave");
                 if (!fileMaker.createNewFile()) {
                     out.println("That save already exists, do you want to overwrite it?");
                     out.println("Enter anything to confirm: ");
@@ -530,12 +527,9 @@ public class RPGMainFrame extends JFrame { // Main method class
         } while (nameOfFile.equals(""));
 
         ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileMaker)));
-        writer.writeInt(maps.size());
         writer.writeInt(maps.indexOf(currentMap));
         writer.writeObject(player);
-        for (Map cMap : maps) {
-            writer.writeObject(cMap);
-        }
+        writer.writeObject(maps);
         writer.close();
 
     }
@@ -547,7 +541,7 @@ public class RPGMainFrame extends JFrame { // Main method class
             try {
                 out.println("Name of load file: ");
                 nameOfFile = k.next();
-                fileMaker = new File("Saves" + File.separator + nameOfFile + ".save");
+                fileMaker = new File("Saves" + File.separator + nameOfFile + ".rpgsave");
                 if (fileMaker.createNewFile()) {
                     out.println("That file does not exist!");
                     nameOfFile = "";
@@ -561,14 +555,10 @@ public class RPGMainFrame extends JFrame { // Main method class
             }
         } while (nameOfFile.equals(""));
         ObjectInputStream reader = new ObjectInputStream(new BufferedInputStream(new FileInputStream(fileMaker)));
-        int num = reader.readInt();
         int cur = reader.readInt();
         try {
             player = (Player) reader.readObject();
-            for (int i = 0; i < num; i++) {
-                Map m = (Map) reader.readObject();
-                maps.add(m);
-            }
+            maps = (ArrayList<Map>) reader.readObject();
         } catch (Exception e) {
             System.out.println("Load failed");
             System.exit(0);
