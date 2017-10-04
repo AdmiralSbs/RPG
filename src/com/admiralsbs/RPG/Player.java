@@ -174,4 +174,14 @@ public class Player extends Entity implements Serializable {
     public int getInventorySize() {
         return inventory.size();
     }
+
+    public void printInventory(SuperOutput out) {
+        out.println("Your inventory:"); // Print inventory
+        for (int i = 0; i < inventory.size(); i++) {
+            out.print((i + 1) + ") " + inventory.get(i).getName());
+            if (inventory.get(i) == weapon)
+                out.print(" (Equipped)");
+            out.println();
+        }
+    }
 }
