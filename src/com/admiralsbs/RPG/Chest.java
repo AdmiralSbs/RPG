@@ -51,4 +51,16 @@ public class Chest extends Stationary implements Serializable {
     public int getContentsSize() {
         return contents.size();
     }
+
+    public void printContents(SuperOutput out) {
+        if (contents.size() == 0) {
+            out.println(name + " is empty");
+        } else {
+            out.println("Inventory of " + name+ ":"); // Print chest inventory
+            for (int i = 0; i < contents.size(); i++) {
+                out.print((i + 1) + ") " + contents.get(i).getName());
+                out.println();
+            }
+        }
+    }
 }
