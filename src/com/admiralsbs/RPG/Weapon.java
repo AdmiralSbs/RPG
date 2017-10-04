@@ -33,4 +33,19 @@ public class Weapon extends Handheld implements Serializable {
     public int getDefenseChange() {
         return defenseChange;
     }
+
+    public void printChanges(SuperOutput out) {
+        if (HPChange > 0) {
+            out.println("HP Increase: " + HPChange);
+        }
+        if (MPChange> 0) {
+            out.println("MP Increase: " + MPChange);
+        }
+        if (attackChange> 0) {
+            out.println("Attack Increase: " + attackChange);
+        }
+        if (defenseChange> 0) {
+            out.println("Defense Increase: " + defenseChange);
+        }
+    }
 }
