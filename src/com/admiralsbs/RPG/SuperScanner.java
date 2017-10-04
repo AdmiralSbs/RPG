@@ -50,6 +50,59 @@ public class SuperScanner implements ActionListener {
         return inty;
     }
 
+    public int nextInt(int min, int max) {
+        int inty;
+        while (true) {
+            waiting = 1;
+            systemIn.setEnabled(true);
+            while (!ready) {
+            }
+            String in = systemIn.getText();
+            systemIn.setText("");
+
+            try {
+                inty = Integer.parseInt(in);
+            } catch (Exception e) {
+                continue;
+            }
+            if (inty >= min && inty <= max)
+                break;
+        }
+        ready = false;
+        waiting = 0;
+        // System.out.println(inty);
+        return inty;
+    }
+
+    public int nextInt(int min, int max, int... exceptions) {
+        int inty;
+        while (true) {
+            waiting = 1;
+            systemIn.setEnabled(true);
+            while (!ready) {
+            }
+            String in = systemIn.getText();
+            systemIn.setText("");
+
+            try {
+                inty = Integer.parseInt(in);
+            } catch (Exception e) {
+                continue;
+            }
+            for (int num : exceptions) {
+                if (inty == num)
+                    continue;
+            }
+            if (inty >= min && inty <= max)
+                break;
+        }
+        ready = false;
+        waiting = 0;
+        // System.out.println(inty);
+        return inty;
+    }
+
+
     public String next() {
         waiting = 1;
         systemIn.setEnabled(true);
