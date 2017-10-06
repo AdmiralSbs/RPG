@@ -18,6 +18,7 @@ public class SuperScanner implements ActionListener {
     }
 
     public String nextLine() {
+        systemIn.requestFocusInWindow();
         waiting = 1;
         systemIn.setEnabled(true);
         while (!ready) {
@@ -30,20 +31,23 @@ public class SuperScanner implements ActionListener {
     }
 
     public int nextInt() {
-        waiting = 1;
-        systemIn.setEnabled(true);
-        while (!ready) {
-        }
-        String in = systemIn.getText();
-        systemIn.setText("");
         int inty;
-        try {
-            inty = Integer.parseInt(in);
-        } catch (Exception e) {
-            inty = -99;
+        while (true) {
+            systemIn.requestFocusInWindow();
+            waiting = 1;
+            systemIn.setEnabled(true);
+            while (!ready) {
+            }
+            String in = systemIn.getText();
+            systemIn.setText("");
+
+            try {
+                inty = Integer.parseInt(in);
+            } catch (Exception e) {
+                continue;
+            }
+            break;
         }
-        if (inty == -1)
-            inty = -99;
         ready = false;
         waiting = 0;
         // System.out.println(inty);
@@ -53,6 +57,7 @@ public class SuperScanner implements ActionListener {
     public int nextInt(int min, int max) {
         int inty;
         while (true) {
+            systemIn.requestFocusInWindow();
             waiting = 1;
             systemIn.setEnabled(true);
             while (!ready) {
@@ -77,6 +82,7 @@ public class SuperScanner implements ActionListener {
     public int nextInt(int min, int max, int... exceptions) {
         int inty;
         while (true) {
+            systemIn.requestFocusInWindow();
             waiting = 1;
             systemIn.setEnabled(true);
             while (!ready) {
@@ -104,6 +110,7 @@ public class SuperScanner implements ActionListener {
 
 
     public String next() {
+        systemIn.requestFocusInWindow();
         waiting = 1;
         systemIn.setEnabled(true);
         while (!ready) {

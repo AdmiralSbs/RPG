@@ -46,7 +46,6 @@ public class RPGMainFrame extends JFrame { // Main method class
             out.clear();
         } else {// Choice == 1
             loadMaps(); // Sets up the maps
-            ((RPGui) game.getContentPane()).getInput().requestFocusInWindow();
             out.println("Enter player name: ");
             String name;
             do {
@@ -197,67 +196,55 @@ public class RPGMainFrame extends JFrame { // Main method class
             out.println("ESC) Exit inventory");
             choiceS = k.getCode("1", "2", "3", "4", "ESCAPE");
 
-            int loc = -1;
-            if (!choiceS.equals("ESCAPE")) {
+            int loc;
+            if (choiceS.equals("ESCAPE")) {
                 out.println();
                 return;
             }
-            if (!choiceS.equals("ESCAPE")) {
-                ((RPGui) game.getContentPane()).getInput().requestFocusInWindow();
-                do { // Select item, forces acceptable int
-                    out.println("Item # (enter 0 to go back): ");
-                    loc = -1;
-                    try {
-                        loc = k.nextInt();
-                    } catch (Exception ignored) {
+            // Select item, forces acceptable int
+            out.println("Item # (enter 0 to go back): ");
+            loc = k.nextInt(0, player.getInventorySize());
+            if (loc == 0)
+                continue;
+            loc -= 1; // Because arrays start with 0
+            out.clear();
+            switch (choiceS) {
+                case "1": // Output description and info
+                    out.println(player.getContent(loc).getName() + ": " + player.getContent(loc).getDescription());
+                    if (player.getContent(loc) instanceof Weapon) {
+                        Weapon w = (Weapon) player.getContent(loc);
+                        w.printChanges(out);
                     }
-                    if (!(loc >= 0 && loc <= player.getInventorySize()) && loc != -1) {
-                        out.println("Invalid input");
-                    }
-                } while (!(loc >= 0 && loc <= player.getInventorySize()));
-            }
-            if (loc != 0) {
-                loc -= 1; // Because arrays start with 0
-                out.clear();
-                switch (choiceS) {
-                    case "1": // Output description and info
-                        out.println(player.getContent(loc).getName() + ": " + player.getContent(loc).getDescription());
-                        if (player.getContent(loc) instanceof Weapon) {
-                            Weapon w = (Weapon) player.getContent(loc);
-                            w.printChanges(out);
-                        }
-                        break;
-                    case "2": // Assign weapon
-                        if (player.getContent(loc) instanceof Weapon) {
-                            Weapon w = (Weapon) player.getContent(loc);
-                            player.assignWeapon(w);
-                        } else
-                            out.println("That item cannot be equipped");
-                        break;
-                    case "3":
-                        if (player.getContent(loc) instanceof Usable) {
-                            out.println("Are you sure?  Type anything to confirm: ");
-                            String y = k.nextLine();
-                            if (!y.equals("")) {
-                                Usable u = (Usable) player.getContent(loc);
-                                u.use(player);
-                                player.removeContent(player.getContent(loc));
-                            }
-                        } else
-                            out.println("That item cannot be used");
-                        break;
-                    case "4":
+                    break;
+                case "2": // Assign weapon
+                    if (player.getContent(loc) instanceof Weapon) {
+                        Weapon w = (Weapon) player.getContent(loc);
+                        player.assignWeapon(w);
+                    } else
+                        out.println("That item cannot be equipped");
+                    break;
+                case "3":
+                    if (player.getContent(loc) instanceof Usable) {
                         out.println("Are you sure?  Type anything to confirm: ");
                         String y = k.nextLine();
                         if (!y.equals("")) {
+                            Usable u = (Usable) player.getContent(loc);
+                            u.use(player);
                             player.removeContent(player.getContent(loc));
                         }
-                        break;
-                }
-
+                    } else
+                        out.println("That item cannot be used");
+                    break;
+                case "4":
+                    out.println("Are you sure?  Type anything to confirm: ");
+                    String y = k.nextLine();
+                    if (!y.equals("")) {
+                        player.removeContent(player.getContent(loc));
+                    }
+                    break;
             }
-        } while (!choiceS.equals("ESCAPE"));
 
+        } while (!choiceS.equals("ESCAPE"));
         // Finished with inventory
     }
 
