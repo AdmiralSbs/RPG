@@ -51,6 +51,15 @@ public class Entity extends Item implements Serializable {
 		MP = getMaxMPTotal();
 	}
 
+    private void initializeStats(double baseLevel, double slant) {
+        maxHP = (int) (Math.random() * 21) + 40;
+        maxMP = (int) (Math.random() * 21) + 10;
+        attack = (int) (Math.random() * 11) + 5;
+        defense = (int) (Math.random() * 11) + 5;
+        HP = getMaxHPTotal();
+        MP = getMaxMPTotal();
+    }
+
 	public void printStats() {
 		if (weapon != null) {
 			out.println("Name: " + name);

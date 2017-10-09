@@ -253,51 +253,61 @@ public class RPGMainFrame extends JFrame { // Main method class
         do { // Inventory loop
             c.printContents(out);
             out.println();
+            out.println("1) Get information");
+            out.println("2) Take item");
+            out.println("3) Put item");
+            out.println("ESC) Exit chest");
             do { // Force an acceptable input
-                out.println("1) Get information");
-                out.println("2) Take item");
-                out.println("3) Put item");
-                out.println("99) Exit chest");
-                choiceS = k.getCode("1", "2", "3", "ESC");
-                if (choiceS.equals("2") && c.getContentsSize() == 0)
+                choiceS = k.getCode("1", "2", "3", "ESCAPE");
+                if (choiceS.equals("2") && c.getContentsSize() == 0) {
+                    out.clear();
                     out.println("There are no items to take");
-
-                if (choiceS.equals("1") && c.getContentsSize() == 0)
+                    out.println();
+                }
+                if (choiceS.equals("1") && c.getContentsSize() == 0) {
+                    out.clear();
                     out.println("There are no items to look at");
-
-                if (choiceS.equals("3") && player.getInventorySize() == 0)
+                    out.println();
+                }
+                if (choiceS.equals("3") && player.getInventorySize() == 0) {
+                    out.clear();
                     out.println("You have no items to put in");
+                    out.println();
+                }
             } while ((choiceS.equals("2") && c.getContentsSize() == 0) || (choiceS.equals("1") &&
                     c.getContentsSize() == 0) || (choiceS.equals("3") && player.getInventorySize() == 0));
-            if (!choiceS.equals("ESCAPE")) {
-                out.println();
-                return;
+            if (choiceS.equals("ESCAPE")) {
+                break;
             }
             int loc;
             if (!choiceS.equals("3")) {
                 out.println("Item # (enter 0 to go back): ");
                 loc = k.nextInt(0, c.getContentsSize());
             } else {
+                out.println();
                 player.printInventory(out);
                 out.println();
                 // Select item, forces acceptable int
                 out.println("Item # (enter 0 to go back): ");
 
-                //loc = -1;
-
-                if (player.getWeapon() != null)
-                    loc = k.nextInt(0, player.getInventorySize(), player.getContentID(player.getWeapon()) - 1);
-                else
-                    loc = k.nextInt(0, player.getInventorySize());
-                /*if (player.getWeapon() == player.getContent(loc - 1)) {
-                    out.println("You can't put that in there!");
-                    loc = -1;
-                }*/
+                loc = -1;
+                while (loc == -1) {
+                    if (player.getWeapon() != null)
+                        loc = k.nextInt(0, player.getInventorySize()/*, player.getContentID(player.getWeapon()) + 1*/);
+                    else
+                        loc = k.nextInt(0, player.getInventorySize());
+                    if (loc == 0)
+                        break;
+                    if (player.getWeapon() == player.getContent(loc - 1)) {
+                        out.println("You can't put that in there!");
+                        loc = -1;
+                    }
+                }
             }
+            out.clear();
             if (loc == 0)
                 continue;
             loc--; // Because arrays start with 0
-            out.clear();
             switch (choiceS) {
                 case "1": // Output description and info
                     out.println(c.getContent(loc).getName() + ": " + c.getContent(loc).getDescription());
@@ -319,10 +329,10 @@ public class RPGMainFrame extends JFrame { // Main method class
             }
             out.println();
 
-        } while (!choiceS.equals("ESC"));
+        } while (true);
 
         // Finished with inventory
-
+        out.println();
     }
 
     private static void cheating() {// For "debugging"

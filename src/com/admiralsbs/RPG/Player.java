@@ -128,13 +128,13 @@ public class Player extends Entity implements Serializable {
             level++;
             out.println(name + " leveled up to level " + level + "!");
 
-            int boost = (int) (Math.random() * 3);
+            int boost = (int) (Math.random() * 3) + 1;
             out.print("HP: " + maxHP + " -> ");
             HP += boost + 3;
             maxHP += boost + 3;
             out.println(maxHP);
 
-            boost = (int) (Math.random() * 3);
+            boost = (int) (Math.random() * 3) + 1;
             out.print("MP: " + maxMP + " -> ");
             MP += boost + 1;
             maxMP += boost + 1;

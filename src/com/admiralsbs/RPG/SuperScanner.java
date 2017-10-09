@@ -18,29 +18,29 @@ public class SuperScanner implements ActionListener {
     }
 
     public String nextLine() {
-        systemIn.requestFocusInWindow();
-        waiting = 1;
         systemIn.setEnabled(true);
+        systemIn.requestFocusInWindow();
+        ready = false;
+        waiting = 1;
         while (!ready) {
         }
         String in = systemIn.getText();
         systemIn.setText("");
-        ready = false;
         waiting = 0;
         return in;
     }
 
     public int nextInt() {
+        systemIn.setEnabled(true);
+        systemIn.requestFocusInWindow();
         int inty;
         while (true) {
-            systemIn.requestFocusInWindow();
+            ready = false;
             waiting = 1;
-            systemIn.setEnabled(true);
             while (!ready) {
             }
             String in = systemIn.getText();
             systemIn.setText("");
-
             try {
                 inty = Integer.parseInt(in);
             } catch (Exception e) {
@@ -48,18 +48,20 @@ public class SuperScanner implements ActionListener {
             }
             break;
         }
-        ready = false;
+
         waiting = 0;
         // System.out.println(inty);
         return inty;
     }
 
     public int nextInt(int min, int max) {
+        systemIn.setEnabled(true);
+        systemIn.requestFocusInWindow();
         int inty;
         while (true) {
-            systemIn.requestFocusInWindow();
+            ready = false;
             waiting = 1;
-            systemIn.setEnabled(true);
+
             while (!ready) {
             }
             String in = systemIn.getText();
@@ -73,18 +75,20 @@ public class SuperScanner implements ActionListener {
             if (inty >= min && inty <= max)
                 break;
         }
-        ready = false;
+
         waiting = 0;
         // System.out.println(inty);
         return inty;
     }
 
     public int nextInt(int min, int max, int... exceptions) {
+        systemIn.setEnabled(true);
+        systemIn.requestFocusInWindow();
         int inty;
+
         while (true) {
-            systemIn.requestFocusInWindow();
+            ready = false;
             waiting = 1;
-            systemIn.setEnabled(true);
             while (!ready) {
             }
             String in = systemIn.getText();
@@ -102,7 +106,6 @@ public class SuperScanner implements ActionListener {
             if (inty >= min && inty <= max)
                 break;
         }
-        ready = false;
         waiting = 0;
         // System.out.println(inty);
         return inty;
@@ -110,15 +113,15 @@ public class SuperScanner implements ActionListener {
 
 
     public String next() {
+        systemIn.setEnabled(true);
         systemIn.requestFocusInWindow();
         waiting = 1;
-        systemIn.setEnabled(true);
+        ready = false;
         while (!ready) {
         }
         String in = systemIn.getText();
         systemIn.setText("");
         String[] ins = in.split(" ");
-        ready = false;
         waiting = 0;
         return ins[0];
     }
@@ -128,6 +131,7 @@ public class SuperScanner implements ActionListener {
         systemIn.setEnabled(false);
         waiter:
         while (true) {
+            ready = false;
             while (!ready) {
             }
             for (String arg : args) {
@@ -136,10 +140,8 @@ public class SuperScanner implements ActionListener {
                     break waiter;
                 }
             }
-            ready = false;
         }
         // System.out.println("Broke");
-        ready = false;
         waiting = 0;
         return code;
     }

@@ -3,7 +3,7 @@ package com.admiralsbs.RPG;
 import java.io.Serializable;
 
 
-public class Item implements Serializable {
+public abstract class Item implements Serializable {
     private static final long serialVersionUID = -2L;
     protected transient static SuperOutput out;
     protected transient static SuperScanner k;
