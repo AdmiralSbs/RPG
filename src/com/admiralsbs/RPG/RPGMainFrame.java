@@ -3,6 +3,7 @@ package com.admiralsbs.RPG;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
+import java.nio.file.*;
 import java.util.ArrayList;
 
 public class RPGMainFrame extends JFrame { // Main method class
@@ -373,26 +374,22 @@ public class RPGMainFrame extends JFrame { // Main method class
         switch (cho) {
             case 1:
                 w = new Weapon("Short Sword", 0, 0, 2, 2, "Well used, not much use to it.");
-                player.addContent(w);
                 break;
             case 2:
                 w = new Weapon("Rusty Axe", 0, 0, 4, 0, "Better for chopping trees");
-                player.addContent(w);
                 break;
             case 3:
                 w = new Weapon("Rotten Staff", 0, 8, 0, 0, "This looks suspiciously like a branch");
-                player.addContent(w);
                 break;
             case 4:
                 w = new Weapon("Cracked Magic Orb", 4, 4, 0, 0, "Appears kind of glossy");
-                player.addContent(w);
                 break;
             case 5:
                 w = new Weapon("Small Shield", 0, 0, 0, 4, "Wait, is this even a weapon?");
-                player.addContent(w);
                 break;
         }
         out.clear();
+        player.addContent(w);
         player.assignWeapon(w);
         out.println();
     }
@@ -441,11 +438,12 @@ public class RPGMainFrame extends JFrame { // Main method class
     private static void saveGame() throws IOException {
         File fileMaker = null;
         String nameOfFile = "";
+        Files.createDirectory(Paths.get("RPGSaves"));
         do {
             try {
                 out.println("Name of save file: ");
                 nameOfFile = k.next();
-                fileMaker = new File("Saves" + File.separator + nameOfFile + ".rpgsave");
+                fileMaker = new File("RPGSaves" + File.separator + nameOfFile + ".rpgsave");
                 if (!fileMaker.createNewFile()) {
                     out.println("That save already exists, do you want to overwrite it?");
                     out.println("Enter anything to confirm: ");
@@ -478,7 +476,7 @@ public class RPGMainFrame extends JFrame { // Main method class
             try {
                 out.println("Name of load file: ");
                 nameOfFile = k.next();
-                fileMaker = new File("Saves" + File.separator + nameOfFile + ".rpgsave");
+                fileMaker = new File("RPGSaves" + File.separator + nameOfFile + ".rpgsave");
                 if (fileMaker.createNewFile()) {
                     out.println("That file does not exist!");
                     nameOfFile = "";
